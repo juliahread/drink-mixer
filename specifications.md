@@ -38,6 +38,8 @@
   * /api/ingredient/all
 * GET get
   * /api/ingredient/get?id={String}
+* DELETE delete
+  * /api/ingredient/delete?id={String}
 
 ## Recipes
 ### Interface
@@ -50,38 +52,49 @@
   * Request JSON
 ```
 {
-   {ingredient.uuid}: {ingredient.amount}
-   ...
-   ...
-   ...
-   ...
-   ...
+   title: {String}
+   ingredients: {
+       {ingredient.uuid}: {ingredient.amount}
+       ...
+       ...
+       ...
+       ...
+       ...
+   }
 }
 ```
 * PUT updateRecipe
   * Request JSON
 ```
 {
-   {ingredient.uuid}: {ingredient.amount}
-   ...
-   ...
-   ...
-   ...
-   ...
+   id: {uuid as String}
+   title: {String}
+   ingredients: {
+       {ingredient.uuid}: {ingredient.amount}
+       ...
+       ...
+       ...
+       ...
+       ...
+   }
 }
 ```
 * GET getRecipe
+  * /api/recipe/get?id={String}
   * Response JSON
 ```
     an ingredient
 ```
 * GET getAll
+  * /api/recipe/all
   * Response JSON
 ```
 [
   ingredients...
 ]
 ```
+* DELETE delete
+  * /api/recipe/delete?id={String}
 
 ## Display
 ### Interface

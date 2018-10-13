@@ -2,6 +2,7 @@
 from flask import jsonify, request, abort
 from app import app
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy_utils import JSONType
 
 import uuid
 import enum
@@ -37,28 +38,25 @@ class Ingredient(db.Model):
         return self.id
 
 # RECIPE CLASS
-# class Recipe(db.Model):
-#     __tablename__ = 'Recipe'
-#     id = db.Column('recipe_id', db.String(60), primary_key=True)
-#     title = db.Column(db.String(60))
-#     type = db.Column(db.Integer)
-#     sugar_content = db.Column(db.Integer)
-#
-#     def __init__(self, title, type, sugarContent):
-#         self.id = str(uuid.uuid4())
-#         self.title = title
-#         self.type = type
-#         self.sugar_content = sugarContent
-#
-#     def get_dict(self):
-#         return {
-#             'id': self.id,
-#             'title': self.title,
-#             'type': self.type,
-#             'sugarContent': self.sugar_content,
-#         }
-#     def get_id(self):
-#         return self.id
+class Recipe(db.Model):
+    __tablename__ = 'Recipe'
+    id = db.Column('recipe_id', db.String(60), primary_key=True)
+    title = db.Column(db.String(60))
+    ingredients = db.Column(JSONType)
+
+    def __init__(self, title, ingredients):
+        self.id = str(uuid.uuid4())
+        self.title = title
+        self.ingredients = ingredients
+
+    def get_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'ingredients': self.ingredients
+        }
+    def get_id(self):
+        return self.id
 
 # Test Route
 @app.route('/api/test')
@@ -114,6 +112,52 @@ def ingredient_update():
 
 @app.route('/api/ingredient/delete', methods=['DELETE'])
 def ingredient_delete():
+    if request.args:
+        Ingredient.query.filter_by(id=request.args.get('id')).delete();
+        return jsonify(message='success');
+    return abort(422);
+
+
+# RECIPE API
+@app.route('/api/recipe/all', methods=['GET'])
+def recipe_get_all():
+    try:
+        recipes = Recipe.query.all()
+    except:
+        initialize_database()
+    return jsonify([recipe.get_dict() for recipe in recipes])
+
+
+@app.route('/api/recipe/get', methods=['GET'])
+def recipe_get():
+    if request.args:
+        recipe = Recipe.query.get(request.args.get('id'));
+        return jsonify(recipe.get_dict());
+    return abort(422);
+
+@app.route('/api/recipe/new',  methods=['POST'])
+def recipe_new():
+    if request.json:
+        title = request.json['title']
+        ingredients = request.json['ingredients']
+        recipe = Recipe(title, ingredients)
+        db.session.add(recipe)
+        db.session.commit()
+        return jsonify(message='success', id=recipe.get_id())
+    return abort(422);
+
+@app.route('/api/recipe/update', methods=['PUT'])
+def recipe_update():
+    if request.json:
+        recipe = Recipe.query.get(request.json['id']);
+        recipe.title = int(request.json['title'])
+        recipe.ingredients = request.json['ingredients']
+        db.session.commit()
+        return jsonify(message='success', id=recipe.get_id())
+    return abort(422);
+
+@app.route('/api/recipe/delete', methods=['DELETE'])
+def recipe_delete():
     if request.args:
         Ingredient.query.filter_by(id=request.args.get('id')).delete();
         return jsonify(message='success');
