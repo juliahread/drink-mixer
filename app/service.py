@@ -57,7 +57,7 @@ def ingredient_get_all():
         ingredients = Ingredient.query.all()
     except:
         initialize_database()
-    return jsonify(ingredients=[ingredient.get_dict() for ingredient in ingredients])
+    return jsonify([ingredient.get_dict() for ingredient in ingredients])
 
 @app.route('/api/ingredient/get', methods=['GET'])
 def ingredient_get():
@@ -70,11 +70,29 @@ def ingredient_get():
 @app.route('/api/ingredient/new',  methods=['POST'])
 def ingredient_new():
     if request.json:
-        title = request.json['title'];
-        type = int(request.json['type']);
+        title = request.json['title']
+        type = int(request.json['type'])
         sugarContent = int(request.json['sugarContent'])
         ingredient = Ingredient(title, type, sugarContent)
         db.session.add(ingredient)
         db.session.commit()
         return jsonify(message='success', id=ingredient.get_id())
+    return abort(422);
+
+@app.route('/api/ingredient/update', methods=['PUT'])
+def ingredient_update():
+    if request.json:
+        ingredient = Ingredient.query.get(request.json['id']);
+        ingredient.title = request.json['title']
+        ingredient.type = int(request.json['type'])
+        ingredient.sugar_content = int(request.json['sugarContent'])
+        db.session.commit()
+        return jsonify(message='success', id=ingredient.get_id())
+    return abort(422);
+
+@app.route('/api/ingredient/delete', methods=['DELETE'])
+def ingredient_delete():
+    if request.args:
+        Ingredient.query.filter_by(id=request.args.get('id')).delete();
+        return jsonify(message='success');
     return abort(422);

@@ -14,6 +14,7 @@
 
 ### API Endpoints
 * POST createIngredient
+  * /api/ingredient/new
   * Request JSON
 ```
 {
@@ -23,6 +24,7 @@
 }
 ```
 * PUT updateIngredient
+  * /api/ingredient/new
   * Request JSON
 ```
 {
@@ -33,9 +35,9 @@
 }
 ```
 * GET getAll
+  * /api/ingredient/all
 * GET get
-  * Query params
-  * {url}?id={String}
+  * /api/ingredient/get?id={String}
 
 ## Recipes
 ### Interface
