@@ -37,7 +37,28 @@ class Ingredient(db.Model):
         return self.id
 
 # RECIPE CLASS
-
+# class Recipe(db.Model):
+#     __tablename__ = 'Recipe'
+#     id = db.Column('recipe_id', db.String(60), primary_key=True)
+#     title = db.Column(db.String(60))
+#     type = db.Column(db.Integer)
+#     sugar_content = db.Column(db.Integer)
+#
+#     def __init__(self, title, type, sugarContent):
+#         self.id = str(uuid.uuid4())
+#         self.title = title
+#         self.type = type
+#         self.sugar_content = sugarContent
+#
+#     def get_dict(self):
+#         return {
+#             'id': self.id,
+#             'title': self.title,
+#             'type': self.type,
+#             'sugarContent': self.sugar_content,
+#         }
+#     def get_id(self):
+#         return self.id
 
 # Test Route
 @app.route('/api/test')
@@ -51,6 +72,7 @@ def initialize_database():
     db.session.add(data1)
     db.session.commit()
 
+# INGREDIENT ROUTES
 @app.route('/api/ingredient/all', methods=['GET'])
 def ingredient_get_all():
     try:
