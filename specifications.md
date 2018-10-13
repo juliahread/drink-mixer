@@ -4,11 +4,11 @@
 ### Interface
 * String name
   * The name of the Ingredients
-* double sugarContent
-  * Sugar content per volume
-* String type
+* Integer sugarContent
+  * Volume per standard sugar drink
+* Integer type
   * Type of ingredient
-  * Syrup or Mixer
+  * Syrup (0) or Mixer (1)
 * String uuid
   * Unique global identifier for ingredient
 
@@ -18,9 +18,8 @@
 ```
 {
     name: {String},
-    type: {String},
-    sugarContent: {double},
-    type: {String}
+    sugarContent: {Integer},
+    type: {Integer}
 }
 ```
 * PUT updateIngredient
@@ -29,15 +28,14 @@
 {
     uuid: {String},
     name: {String},
-    type: {String},
-    sugarContent: {double},
-    type: {String}
+    type: {Integer},
+    sugarContent: {Integer}
 }
 ```
 * GET getAll
 * GET get
   * Query params
-  * {url}?uuid={String}
+  * {url}?id={String}
 
 ## Recipes
 ### Interface
